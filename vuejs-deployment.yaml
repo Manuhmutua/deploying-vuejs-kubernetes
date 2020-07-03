@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vuejs
+  labels:
+    app: vuejs
+spec:
+  ports:
+    - port: 8080
+  selector:
+    app: vuejs
+    tier: frontend
+  type: LoadBalancer
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: vuejs
+  labels:
+    app: vuejs
+spec:
+  selector:
+    matchLabels:
+      app: vuejs
+      tier: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: vuejs
+        tier: frontend
+    spec:
+      containers:
+      - image: gcr.io/wordpress-on-k8s-282207/vuejs-project:latest
+        name: vuejs
+        env:
+        ports:
+        - containerPort: 8080
+          name: vuejs
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          
