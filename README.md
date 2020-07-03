@@ -1,2 +1,0 @@
-# vuejs-project-kubernetes-gcp
-----
