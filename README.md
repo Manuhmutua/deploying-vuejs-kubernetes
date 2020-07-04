@@ -1,27 +1,42 @@
-# productsmarketplace
+# deploying-vuejs-kubernetes
 
-> A Vue.js project
+> To continue make sure you have installed and properly setup, [Docker](https://www.docker.com), [cloud SDK](https://cloud.google.com/sdk/install) and [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/). This includes generating an endpoint to your GCP kubernetes cluster.
 
-## Build Setup
+## deployment
 
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
+Git clone this repository.
+```sh
+git clone https://github.com/Manuhmutua/deploying-vuejs-kubernetes.git
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+Build docker image and tag it to push to GCR(google container registry) like:
+```sh
+docker build . -t gcr.io/PROJECT_ID/IMAGE_NAME
+```
+
+Configure docker with gcloud like:
+```sh
+gcloud auth configure-docker
+```
+
+Push the image to GCR like:
+```sh
+docker push gcr.io/PROJECT_ID/IMAGE_NAME
+```
+
+Then create an IP address for Ingress like:
+```sh
+gcloud compute addresses create IP_NAME --global
+```
+
+Then get the created IP address details like:
+```sh
+gcloud compute addresses describe IP_NAME --global
+```
+
+Then apply deployments like:
+```sh
+kubectl apply -f vuejs-certificate.yaml,vuejs-deployment.yaml,vuejs-ingress.yaml,vuejs-service.yaml
+```
+
+In this example we are using Google managed certificate. Find the example app [here](https://vuejs.gleestop.com/)
