@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: vuejs-ingress
+  labels:
+    app: vuejs
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: vuejs-ip
+    networking.gke.io/managed-certificates: vuejs-certificate
+spec:
+  backend:
+    serviceName: vuejs-service
+    servicePort: 8080
